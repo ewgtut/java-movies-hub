@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import ru.practicum.moviehub.api.Endpoint;
 import ru.practicum.moviehub.api.ErrorObject;
 import ru.practicum.moviehub.api.MovieWithId;
 import ru.practicum.moviehub.model.Movie;
@@ -88,6 +89,13 @@ public class MoviesHandler implements HttpHandler {
     private void handleGetMovies(HttpExchange exchange) throws IOException {
         String response = gson.toJson(moviesStore.getMovies());
         writeResponse(exchange, response, 200);
+    }
+
+    private void handleUnknown(HttpExchange exchange) throws IOException {
+        ErrorObject errorObject = new ErrorObject();
+        errorObject.setError("Неизвестный эндпоинт");
+        String response = gson.toJson(errorObject);
+        writeResponse(exchange, response, 404);
     }
 
     private void handleGetMoviesFiltered(HttpExchange exchange) throws IOException {
@@ -205,5 +213,3 @@ public class MoviesHandler implements HttpHandler {
         writeResponse(exchange, response, code);
     }
 }
-
-enum Endpoint {GET_MOVIES, GET_MOVIES_FILTERED, DELETE_MOVIE, GET_MOVIE, POST_MOVIE, UNKNOWN}
